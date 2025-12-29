@@ -23,226 +23,319 @@
   </script>
 
   <style>
-    /* Reset */
-    /* Reset */
-    * {
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, sans-serif;
+    @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+
+    :root {
+      --primary-color: #6366f1;
+      --primary-hover: #4f46e5;
+      --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
     }
 
     body {
       margin: 0;
-      background: linear-gradient(135deg, #ff9800, #ffb74d);
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-gradient);
+      background-attachment: fixed;
       min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      color: var(--text-main);
+      direction: rtl;
+      /* لدعم اللغة العربية بشكل أفضل */
+    }
+
+    #root {
+      width: 100%;
+      max-width: 600px;
+      padding: 20px;
     }
 
     .App {
       display: flex;
       flex-direction: column;
+      min-height: 90vh;
+    }
+
+    .add-page-wrapper {
+      flex: 1;
+      display: flex;
       align-items: center;
-      padding: 20px;
+      justify-content: center;
+      width: 100%;
     }
 
     nav {
-      background: rgba(255, 255, 255, 0.85);
-      padding: 12px 30px;
-      border-radius: 40px;
-      margin-bottom: 30px;
       display: flex;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(15px);
+      padding: 12px;
+      border-radius: 20px;
       justify-content: center;
-      gap: 20px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-      backdrop-filter: blur(10px);
-      width: 100%;
-      max-width: 480px;
-      /* أطول من الكارد (420px) */
+      gap: 15px;
+      position: sticky;
+      top: 15px;
+      z-index: 1000;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      margin-bottom: 50px;
     }
 
     nav button {
-      background: linear-gradient(135deg, #ffb74d, #ff9800);
-      color: white;
-      font-weight: 600;
+      background: linear-gradient(45deg, #6366f1, #a855f7);
       border: none;
-      padding: 10px 22px;
-      border-radius: 30px;
+      color: white;
+      padding: 10px 30px;
+      font-size: 16px;
+      font-weight: bold;
       cursor: pointer;
-      font-size: 15px;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 
     nav button:hover {
-      background: linear-gradient(135deg, #ffb74d, #ff9800);
-      color: white;
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+      filter: brightness(1.1);
     }
 
     nav button:active {
-      transform: translateY(0) scale(0.98);
+      transform: translateY(0);
     }
 
-    nav button.active {
-      background: linear-gradient(135deg, #ff9800, #ffb74d);
-      color: white;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
-      transform: scale(1.08);
-    }
-
-    /* الكارد */
-    .card {
-      background: white;
-      width: 100%;
-      max-width: 420px;
+    .card,
+    .joke-card {
+      background: var(--card-bg);
       padding: 25px;
-      border-radius: 30px;
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
       display: flex;
       flex-direction: column;
       gap: 15px;
+      animation: fadeIn 0.5s ease;
     }
 
-    .card input {
-      padding: 12px 15px;
-      border-radius: 20px;
-      border: 2px solid #ffcc80;
-      outline: none;
-      font-size: 15px;
-    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
 
-    .card input:focus {
-      border-color: #ff9800;
-      box-shadow: 0 0 8px rgba(255, 152, 0, 0.4);
-    }
-
-    .type-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-    }
-
-    .type-buttons button {
-      background: #ffe0b2;
-      color: #e65100;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 18px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-
-    .type-buttons button:hover {
-      background: #ff9800;
-      color: white;
-      transform: scale(1.05);
-    }
-
-    .type-buttons button.active {
-      background: #ff9800;
-      color: white;
-      box-shadow: 0 0 10px rgba(255, 152, 0, 0.6);
-      transform: scale(1.08);
-    }
-
-    /* زر الإرسال */
-    .card>button {
-      background: #ff9800;
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 25px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .card>button:hover {
-      background: #e65100;
-      transform: translateY(-2px);
-    }
-
-    /* Status */
-    .status {
-      text-align: center;
-      font-weight: bold;
-      color: #e65100;
-      margin-top: 10px;
-    }
-
-    /* ShowPage */
-    .show-container {
-      width: 100%;
-      max-width: 1000px;
-    }
-
-    .jokes-wrapper {
-      background: white;
-      /* خلفية بيضاء */
-      padding: 25px;
-      /* مسافة داخل الورقة */
-      border-radius: 25px;
-      margin-top: 20px;
-      /* مسافة بين الأزرار والورقة */
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-    }
-
-    /* كل كارد نكتة */
-    .joke-card {
-      background: white;
-      border-radius: 25px;
-      overflow: hidden;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* الرأس */
-    .joke-header {
-      background: linear-gradient(135deg, #ff9800, #ffb74d);
-      color: white;
-      padding: 12px 18px;
-      font-weight: bold;
-      font-size: 16px;
-    }
-
-    /* نص النكتة */
-    .joke-body {
-      padding: 18px;
-      font-size: 15px;
-      color: #333;
-      line-height: 1.6;
-    }
-
-    @media screen and (max-width: 600px) {
-      .jokes-wrapper {
-        grid-template-columns: 1fr;
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
 
-    .dev-badge {
-      background: white;
-      color: #ff9800;
-      border-radius: 50%;
-      width: 28px;
-      height: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: bold;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    /* Inputs & Form */
+    input {
+      padding: 12px 15px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      outline: none;
+      transition: 0.3s;
+      font-size: 16px;
     }
 
-    /* ترتيب اسم + التاج */
+    input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    }
+
+    /* Buttons */
+    button {
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      background: var(--primary-color);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    /* Category Buttons */
+    .type-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .type-buttons button {
+      background: #f3f4f6;
+      color: var(--text-main);
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+
+    .type-buttons button.active {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    /* Jokes List */
+    .jokes-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .joke-card {
+      border-right: 5px solid var(--primary-color);
+    }
+
     .joke-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-weight: bold;
+      color: var(--text-muted);
+      font-size: 14px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+    }
+
+    .dev-badge {
+      background: #fef3c7;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
+
+    .joke-body {
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--text-main);
+    }
+
+    .status {
+      text-align: center;
+      padding: 10px;
+      border-radius: 10px;
+      background: #ecfdf5;
+      color: #065f46;
+      font-weight: bold;
+    }
+
+    .joke-header span:first-child {
+      background: var(--primary-color);
+      /* لون البقعة */
+      color: white;
+      padding: 8px 18px;
+      font-weight: bold;
+      position: relative;
+      display: inline-block;
+
+      /* شكل غير منتظم باستخدام border-radius عشوائي */
+      border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+
+      /* إضافة تأثير التذبذب لتبدو كبقعة حقيقية */
+      box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .joke-header span:first-child:hover {
+      transform: scale(1.05) rotate(2deg);
+      /* تغيير شكل البقعة عند التمرير */
+      border-radius: 60% 40% 30% 70% / 50% 30% 70% 50%;
+    }
+
+    /* تعديل حاوية الهيدر لتناسب البقعة */
+    .joke-header {
+      border-bottom: none;
+      /* أزلنا الخط التقليدي */
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* إذا أردت أن تكون البقعة بنفس لون خلفية الصفحة المتدرجة */
+    .joke-header span:first-child {
+      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    }
+
+    /* تحسين شكل علامة المطور لتطفو فوق البقعة */
+    .dev-badge {
+      background: #ffcf33 !important;
+      color: #000;
+      border-radius: 50% !important;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 480px) {
+      #root {
+        padding: 10px;
+      }
+
+      .card {
+        padding: 15px;
+      }
+    }
+
+    .graffiti-title {
+      font-family: 'Permanent Marker', cursive;
+      /* خط يشبه قلم الماركر أو الجرافيتي */
+      font-size: 42px;
+      color: white;
+      text-align: center;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      transform: rotate(-3deg);
+      /* ميلان بسيط كأنه مرسوم باليد */
+
+      /* تأثيرات الظل لتبدو كأنها مرسومة بالبخاخ */
+      text-shadow:
+        3px 3px 0px #ff00ff,
+        6px 6px 0px #00ffff,
+        9px 9px 20px rgba(0, 0, 0, 0.5);
+
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+      animation: sprayAppear 0.8s ease-out;
+    }
+
+    @keyframes sprayAppear {
+      0% {
+        opacity: 0;
+        transform: scale(0.5) rotate(10deg);
+        filter: blur(10px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1) rotate(-3deg);
+        filter: blur(0);
+      }
+    }
+
+    /* تأكد أن الحاوية داخل الـ wrapper ترتب العناصر عمودياً */
+    .add-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
     }
   </style>
 </head>
@@ -288,20 +381,26 @@
       };
 
       return (
-        <div className="card">
-          <input value={Name} onChange={(e) => SetName(e.target.value)} placeholder="Your Name" />
-          <input value={Joke} onChange={(e) => SetJoke(e.target.value)} placeholder="Your Joke" />
-          <div className="type-buttons">
-            {["social", "school", "movie", "sport"].map((t) => (
-              <button key={t} className={Type === t ? "active" : ""} onClick={() => SetType(t)}>
-                {t}
-              </button>
-            ))}
+        <div className="add-content">
+          {/* العنوان الجديد بنمط الجرافيتي */}
+          <h2 className="graffiti-title">Add Your Joke</h2>
+
+          <div className="card">
+            <input value={Name} onChange={(e) => SetName(e.target.value)} placeholder="Your Name" />
+            <input value={Joke} onChange={(e) => SetJoke(e.target.value)} placeholder="Joke" />
+            <div className="type-buttons">
+              {["social", "school", "movie", "sport"].map((t) => (
+                <button key={t} className={Type === t ? "active" : ""} onClick={() => SetType(t)}>
+                  {t}
+                </button>
+              ))}
+            </div>
+            <button className="submit-btn" onClick={AddJoke}>Post</button>
+            {Status && <div className="status">{Status}</div>}
           </div>
-          <button onClick={AddJoke}>Submit</button>
-          {Status && <div className="status">{Status}</div>}
         </div>
       );
+
     }
 
     function ShowPage() {
@@ -333,7 +432,7 @@
               jokes.map((j, i) => (
                 <div className="joke-card" key={i}>
                   <div className="joke-header">
-                    <span>{j.Name}</span>
+                    <span>@{j.Name}</span>
 
                     {j.Name.toLowerCase() === "dev" && (
                       <span className="dev-badge">👑</span>
@@ -356,12 +455,18 @@
             <button onClick={() => setPage("add")}>Add</button>
             <button onClick={() => setPage("show")}>Show</button>
           </nav>
-          {page === "add" && <AddPage />}
-          {page === "show" && <ShowPage />}
+
+          {/* هنا يتم توسيط صفحة الإضافة فقط */}
+          {page === "add" ? (
+            <div className="add-page-wrapper">
+              <AddPage />
+            </div>
+          ) : (
+            <ShowPage />
+          )}
         </div>
       );
     }
-
     const root = ReactDOM.createRoot(document.getElementById("root"));
     root.render(<App />);
   </script>
