@@ -14,13 +14,13 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-NE8QH6RTWG"></script>
-    <script>
+  <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
 
     gtag('config', 'G-NE8QH6RTWG');
-</script>
+  </script>
 
   <style>
     /* Reset */
@@ -223,6 +223,27 @@
         grid-template-columns: 1fr;
       }
     }
+
+    .dev-badge {
+      background: white;
+      color: #ff9800;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* ترتيب اسم + التاج */
+    .joke-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
   </style>
 </head>
 
@@ -311,7 +332,13 @@
             ) : (
               jokes.map((j, i) => (
                 <div className="joke-card" key={i}>
-                  <div className="joke-header">{j.Name}</div>
+                  <div className="joke-header">
+                    <span>{j.Name}</span>
+
+                    {j.Name.toLowerCase() === "dev" && (
+                      <span className="dev-badge">👑</span>
+                    )}
+                  </div>
                   <div className="joke-body">{j.Body}</div>
                 </div>
               ))
@@ -342,4 +369,3 @@
 
 
 </html>
-
