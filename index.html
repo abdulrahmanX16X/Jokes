@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>React CDN App</title>
+
+  <!-- Axios -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <!-- React -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    /* Reset */
+    /* Reset */
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #ff9800, #ffb74d);
+      min-height: 100vh;
+    }
+
+    .App {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    nav {
+      background: rgba(255, 255, 255, 0.85);
+      padding: 12px 30px;
+      border-radius: 40px;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      backdrop-filter: blur(10px);
+      width: 100%;
+      max-width: 480px;
+      /* أطول من الكارد (420px) */
+    }
+
+    nav button {
+      background: linear-gradient(135deg, #ffb74d, #ff9800);
+      color: white;
+      font-weight: 600;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    nav button:hover {
+      background: linear-gradient(135deg, #ffb74d, #ff9800);
+      color: white;
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    }
+
+    nav button:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    nav button.active {
+      background: linear-gradient(135deg, #ff9800, #ffb74d);
+      color: white;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+      transform: scale(1.08);
+    }
+
+    /* الكارد */
+    .card {
+      background: white;
+      width: 100%;
+      max-width: 420px;
+      padding: 25px;
+      border-radius: 30px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .card input {
+      padding: 12px 15px;
+      border-radius: 20px;
+      border: 2px solid #ffcc80;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .card input:focus {
+      border-color: #ff9800;
+      box-shadow: 0 0 8px rgba(255, 152, 0, 0.4);
+    }
+
+    .type-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .type-buttons button {
+      background: #ffe0b2;
+      color: #e65100;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 18px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .type-buttons button:hover {
+      background: #ff9800;
+      color: white;
+      transform: scale(1.05);
+    }
+
+    .type-buttons button.active {
+      background: #ff9800;
+      color: white;
+      box-shadow: 0 0 10px rgba(255, 152, 0, 0.6);
+      transform: scale(1.08);
+    }
+
+    /* زر الإرسال */
+    .card>button {
+      background: #ff9800;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .card>button:hover {
+      background: #e65100;
+      transform: translateY(-2px);
+    }
+
+    /* Status */
+    .status {
+      text-align: center;
+      font-weight: bold;
+      color: #e65100;
+      margin-top: 10px;
+    }
+
+    /* ShowPage */
+    .show-container {
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .jokes-wrapper {
+      background: white;
+      /* خلفية بيضاء */
+      padding: 25px;
+      /* مسافة داخل الورقة */
+      border-radius: 25px;
+      margin-top: 20px;
+      /* مسافة بين الأزرار والورقة */
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    /* كل كارد نكتة */
+    .joke-card {
+      background: white;
+      border-radius: 25px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* الرأس */
+    .joke-header {
+      background: linear-gradient(135deg, #ff9800, #ffb74d);
+      color: white;
+      padding: 12px 18px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* نص النكتة */
+    .joke-body {
+      padding: 18px;
+      font-size: 15px;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    @media screen and (max-width: 600px) {
+      .jokes-wrapper {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function AddPage() {
+      const [Name, SetName] = useState("");
+      const [Joke, SetJoke] = useState("");
+      const [Type, SetType] = useState("");
+      const [Status, SetStatus] = useState("");
+
+      const sanitizeInput = (text) =>
+        text.replace(/</g, "&lt;").replace(/>/g, "&gt;")
+          .replace(/\{/g, "&#123;").replace(/\}/g, "&#125;");
+
+      const AddJoke = async () => {
+        if (!Name || !Joke || !Type) {
+          SetStatus("الرجاء ملء كل الحقول 🛑");
+          return;
+        }
+        try {
+          const res = await axios.post("https://joke1.onrender.com/create", {
+            name: sanitizeInput(Name),
+            body: sanitizeInput(Joke),
+            type: Type,
+          });
+          if (res.data.Success) {
+            SetStatus("تمت الإضافة بنجاح ✅");
+            SetName("");
+            SetJoke("");
+            SetType("");
+          } else {
+            SetStatus(res.data.e || "حدث خطأ ❌");
+          }
+        } catch {
+          SetStatus("تعذر الإرسال ❌");
+        }
+      };
+
+      return (
+        <div className="card">
+          <input value={Name} onChange={(e) => SetName(e.target.value)} placeholder="Your Name" />
+          <input value={Joke} onChange={(e) => SetJoke(e.target.value)} placeholder="Your Joke" />
+          <div className="type-buttons">
+            {["social", "school", "movie", "sport"].map((t) => (
+              <button key={t} className={Type === t ? "active" : ""} onClick={() => SetType(t)}>
+                {t}
+              </button>
+            ))}
+          </div>
+          <button onClick={AddJoke}>Submit</button>
+          {Status && <div className="status">{Status}</div>}
+        </div>
+      );
+    }
+
+    function ShowPage() {
+      const [jokes, setJokes] = useState([]);
+      const [type, setType] = useState("any");
+
+      useEffect(() => { fetchJokes(); }, [type]);
+
+      const fetchJokes = async () => {
+        try {
+          const res = await axios.get(`https://joke1.onrender.com/jokes?type=${type}`);
+          if (res.data.Success) setJokes(res.data.jokes);
+        } catch { }
+      };
+
+      return (
+        <div className="show-container">
+          <div className="type-buttons">
+            {["any", "social", "school", "movie", "sport"].map((t) => (
+              <button key={t} className={type === t ? "active" : ""} onClick={() => setType(t)}>
+                {t === "any" ? "الكل" : t}
+              </button>
+            ))}
+          </div>
+          <div className="jokes-wrapper">
+            {jokes.length === 0 ? (
+              <p>لا توجد نكت 😴</p>
+            ) : (
+              jokes.map((j, i) => (
+                <div className="joke-card" key={i}>
+                  <div className="joke-header">{j.Name}</div>
+                  <div className="joke-body">{j.Body}</div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      const [page, setPage] = useState("add");
+      return (
+        <div className="App">
+          <nav>
+            <button onClick={() => setPage("add")}>Add</button>
+            <button onClick={() => setPage("show")}>Show</button>
+          </nav>
+          {page === "add" && <AddPage />}
+          {page === "show" && <ShowPage />}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+
+</html>
