@@ -16,7 +16,6 @@
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
-
     gtag('config', 'G-NE8QH6RTWG');
   </script>
   
@@ -27,8 +26,8 @@
     .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-200 min-h-screen">
 
+<body class="bg-slate-950 text-slate-200 min-h-screen">
   <div id="root"></div>
 
   <script type="text/babel">
@@ -79,8 +78,14 @@
         setError(null);
         try {
           const res = await axios.get(`https://joke1.onrender.com/jokes?type=${type}`);
+
           if (res.data.Success) {
-            setJokes(res.data.jokes || []);
+            // 🔥 FIX: sort by date (oldest → newest)
+            const sorted = (res.data.jokes || []).sort(
+              (a, b) => new Date(a.DateOfAdd) - new Date(b.DateOfAdd)
+            );
+
+            setJokes(sorted);
           } else {
             throw new Error("Failed to fetch jokes.");
           }
@@ -95,7 +100,6 @@
 
       return (
         <div className="space-y-6">
-          {/* Category Circles */}
           <div className="flex flex-wrap justify-center gap-3 mb-6">
             {categories.map((cat) => (
               <button
@@ -222,4 +226,3 @@
   </script>
 </body>
 </html>
-
